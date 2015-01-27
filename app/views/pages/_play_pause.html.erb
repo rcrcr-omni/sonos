@@ -1,0 +1,7 @@
+<div id="playback-controls">
+<% if @speaker.is_playing? == false %>
+	<%= render 'play_controls' %>
+<% else %>
+	<%= render 'pause_controls' %>
+<% end %>
+</div>

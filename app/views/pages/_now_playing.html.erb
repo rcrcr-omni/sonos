@@ -1,0 +1,7 @@
+<div id="now-playing">
+Now Playing: <%= @speaker.now_playing[:title] %> - <%= @speaker.now_playing[:artist] %>
+		<br>
+		<img src="<%= @speaker.now_playing[:album_art] %>">
+		<br>
+		<%= link_to 'add top gun to queue', '#', id: "addtoqueue", remote: true %>
+</div>

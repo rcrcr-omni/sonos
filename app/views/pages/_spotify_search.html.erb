@@ -1,0 +1,37 @@
+<% if @artists.empty? && @albums.empty? && @tracks.empty? %>
+	Woah! Your taste is so eclectic it's broken the internet. We didn't find anything to match that!
+<% else %>
+	<div>
+		<h2>Artists</h2>
+			<% if @artists.empty? %>
+				<p>Are you trying to put Taylor Swift on? Try searching again.</p>
+			<% else %>	
+				<%= @artists.each do |artist| %>
+					<p><%= artist.name %></p>
+				<% end %>
+			<% end %>
+
+	</div>
+	<div>
+		<h2>Albums</h2>
+			<% if @albums.empty? %>
+				<p>Hmm. No albums called that. Better try something else.</p>
+			<% else %>	
+				<%= @albums.each do |album| %>
+					<p><%= album.name %></p>
+				<% end %>
+			<% end %>
+
+	</div>	
+	<div>
+		<h2>Tracks</h2>
+			<% if @tracks.empty? %>
+				<p>Sorry, there aren't any songs with that title. Feeling inspired? Write it!</p>
+			<% else %>	
+				<%= @tracks.each do |track| %>
+					<p><%= track.name %></p>
+				<% end %>
+			<% end %>
+
+	</div>
+<% end %>

@@ -1,0 +1,13 @@
+<%= link_to 'pause', '#', id: "pause-button", remote: true %>
+<%= link_to 'next', '#', id: "next-button", remote: true %>
+
+<script>
+	$('#pause-button').click(function() {
+		$.post('/pages/pause/');
+	});
+	$('#next-button').click(function() {
+		$.post('/pages/next/');
+	});
+
+</script>
+	

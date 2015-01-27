@@ -40,6 +40,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin]
 
 gem 'sonos'
 
+gem 'rspotify'
+
 group :development, :test do
 	gem 'sqlite3'
 end

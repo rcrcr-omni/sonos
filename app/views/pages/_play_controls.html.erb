@@ -1,0 +1,9 @@
+<%= link_to 'play', '#', id: "play-button", remote: true %>
+
+
+<script>
+	$('#play-button').click(function() {
+		$.post('/pages/play/');
+	});
+</script>
+	

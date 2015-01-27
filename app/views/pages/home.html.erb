@@ -1,7 +1,42 @@
+<% if @speaker == nil %>
+	<div> 
+		Sonos couldn't be found
+		</div>
+<% else %>		
+
 <div>
-	What up world, bitch
+	<% if @speaker.is_playing? %>
+		
+		<% else %> 
+		There ain't no music happenin' here!
+	<% end %>
 </div>
 
 <div>
-	<%= link_to "Play", @speaker.play %>
+	<%= render 'play_pause' %>
 </div>
+
+<div>
+	<%= render 'queue' %>
+<% end %>
+
+<script>
+	$('#addtoqueue').click(function() {
+		$.ajax({
+			type: 'post',
+			data: '&uri=2CJtimCSGAn8x6RE3irZFV',
+			dataType: 'script',
+			url: '/pages/add_to_queue/' });
+	});
+	$(document).ready(function () {
+    // will call refreshPartial every 3 seconds
+    setInterval(refreshPartial, 3000)
+});
+	// calls action refreshing the partial
+function refreshPartial() {
+  $.ajax({
+    url: "pages/refresh_part",
+    dataType: 'script';
+ })
+}
+</script>

@@ -1,7 +1,21 @@
 Rails.application.routes.draw do
 
+  resources :pages do
+    collection do
+      post 'play'
+      post 'pause'
+      post 'next'
+      post 'add_to_queue'
+      post 'refresh_part'
+      post 'spotify_search'
+    end
+  end
 
   root 'pages#home'
+
+  get '/spotify/' => 'pages#spotify'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
