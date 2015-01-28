@@ -6,7 +6,7 @@
 
 <div>
 	<% if @speaker.is_playing? %>
-		
+		<%= render 'now_playing' %>
 		<% else %> 
 		There ain't no music happenin' here!
 	<% end %>

@@ -67,8 +67,8 @@ helper_method :success_path
     # if > 3, 'You can't add any more songs this week. Too many have been skipped!' 
     # else 
 
-    @uri = params[:uri]
-    # @speaker.add_to_queue 'x-sonos-spotify:spotify:track:' + @uri.to_s +'sid=9&amp;flags=32' # replace with variable for spotify URI
+    @uri = params[:uri] 
+    @speaker.add_to_queue 'x-sonos-spotify:spotify:track:2CJtimCSGAn8x6RE3irZFVsid=9&amp;flags=32' # replace with variable for spotify URI
   end 
 
   # def if queue is empty, select random playlist and play 
@@ -82,8 +82,8 @@ helper_method :success_path
   private 
 
   def get_speaker
-    #system = Sonos::System.new # Auto-discovers your system
-    #@speaker = system.groups.first.master_speaker 
+    system = Sonos::System.new # Auto-discovers your system
+    @speaker = system.groups.first.master_speaker 
   end
 
 end
