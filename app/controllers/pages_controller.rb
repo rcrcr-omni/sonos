@@ -20,7 +20,6 @@ class PagesController < ApplicationController
       @artists = RSpotify::Artist.search(params[:search])
       @albums = RSpotify::Album.search(params[:search])
       @tracks = RSpotify::Track.search(params[:search])
-
     end
 
 
@@ -82,8 +81,8 @@ helper_method :success_path
   private 
 
   def get_speaker
-    system = Sonos::System.new # Auto-discovers your system
-    @speaker = system.groups.first.master_speaker 
+    # system = Sonos::System.new # Auto-discovers your system
+    # @speaker = system.groups.first.master_speaker 
   end
 
 end

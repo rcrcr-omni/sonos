@@ -40,6 +40,14 @@ gem 'sonos'
 
 gem 'rspotify'
 
+gem 'devise'
+
+gem 'bootstrap-sass'
+
+gem 'font-awesome-rails'
+
+
+
 group :development, :test do
 	gem 'sqlite3'
 end

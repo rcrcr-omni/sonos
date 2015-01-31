@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   resources :pages do
     collection do
       post 'play'
@@ -9,6 +10,10 @@ Rails.application.routes.draw do
       post 'refresh_part'
       post 'spotify_search'
     end
+  end
+
+  resources :users, only: [:show] do
+    resources :playlists
   end
 
   root 'pages#home'

@@ -1,10 +1,13 @@
-<%= text_field_tag :search, params[:search], placeholder: "What do you want to listen to?", id: "spotifysearch" %>
-<%= link_to 'search', '#', id: "search-button", remote: true %> 
+<div class="container">
+	<div class="form-group">
+		<%= text_field_tag :search, params[:search], placeholder: "What do you want to listen to?", id: "spotifysearch", class: "form-control col-lg-12" %>
+		<%= link_to fa_icon('spotify 2x') + ' Search Spotify', '#', id: "search-button", remote: true, class: "btn btn-search  col-lg-12" %> 
+	</div>	
 
-<div id="search-results">
+	<div id="search-results">
 
-</div>	
-
+	</div>	
+</div>
 
 <script>
 $('#search-button').click(function() {

@@ -1,0 +1,53 @@
+
+/****** Search Styles *****/
+
+body {
+	padding-top: 70px;
+}
+
+#spotifysearch{
+	height: 50px;
+	font-size: 20px;
+	padding: 10 0 10 0;
+}
+
+.btn-search {
+	background-color: rgb(132, 189,0);
+	font-size: 20px;
+	color: #fff;
+}
+
+.search-results {
+	height: 50px;
+	clear:both;
+	margin-top: 10px;
+}
+
+.art, .details {
+	float:left;
+}
+
+.art, .details {
+	margin-right: 30px; 
+}
+
+.actions {
+	float: right;
+	padding: 0 10px 0 10px;
+}
+
+
+
+/* RESPONSIVE STYLES */
+
+@media (min-width: 1200px) {
+    .container{
+        max-width: 940px;
+    }
+}
+
+/* styles above here */
+
+@import 'bootstrap';
+/* @import "font-awesome-sprockets"; */
+@import "font-awesome";
