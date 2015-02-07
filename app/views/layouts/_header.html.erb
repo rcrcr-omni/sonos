@@ -17,7 +17,6 @@
         <!-- Check if User is signed in. If so, serve session links -->
         <% if user_signed_in? %>
           <li><%= link_to "Hi, " + current_user.try(:first_name) %></li>
-          <li>You have <%= current_user.skip_count %> skips remaining today</li>
             <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete %></li> 
         <% else %> <!-- Otherwise, serve login link-->
         <li><%= link_to "Sign In", new_user_session_path %></li>

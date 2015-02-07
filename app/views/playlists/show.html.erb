@@ -1,0 +1,19 @@
+<div class="container">
+	<h2><%= @playlist.name %> by <%= @user.first_name %> </h2>
+	<div>
+		<% @playlist.tracks.each do |track| %> 
+			<%= track.name %><br>
+			<%= link_to 'next', '', id: "next-button-" + track.id.to_s, remote: true %>
+				<script>
+					$('#next-button-<%= track.id %>').click(function() {
+						$.ajax({
+							type: 'post',
+							data: '&:id=<%= track.id %>' + '&:user_id=<%= track.user_id %>',
+							dataType: 'script',
+							url: '/pages/next/' });
+					});
+				</script>
+	
+		<% end %>
+	</div>
+</div>

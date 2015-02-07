@@ -5,6 +5,10 @@ body {
 	padding-top: 70px;
 }
 
+.center {
+	text-align:center;
+}
+
 #spotifysearch{
 	height: 50px;
 	font-size: 20px;
@@ -36,7 +40,13 @@ body {
 	padding: 0 10px 0 10px;
 }
 
+.table_header {
+	font-weight:900;
+}
 
+.track-management {
+	margin-top: 20px;
+}
 
 /* RESPONSIVE STYLES */
 

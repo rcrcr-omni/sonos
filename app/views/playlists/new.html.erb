@@ -1,0 +1,9 @@
+<div class="container">
+	<%= form_for [@playlist] do |f| %>
+
+	  <div><%= f.label :name %><br />
+	  <%= f.text_field :name, autofocus: true %></div>
+
+	  <div><%= f.submit "Create Playlist" %></div>
+	<% end %>
+</div>

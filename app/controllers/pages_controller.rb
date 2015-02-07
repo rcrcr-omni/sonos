@@ -1,14 +1,20 @@
 class PagesController < ApplicationController
   before_filter :get_speaker
+  before_filter :set_user
 
   require 'rubygems'
   require 'sonos'
   require 'rspotify'
 
   def home
+    @playlists = Playlist.all
+    @playlist = current_user.playlists.build
   end
 
   def spotify
+    @playlists = Playlist.all
+    @playlist = current_user.playlists.build
+    @users = User.all
   end
   
   def spotify_search
@@ -38,51 +44,88 @@ helper_method :success_path
   end
 
   def play
-  	@speaker.play
+  	# @speaker.play
+    @user = current_user
+    @user.play_count = @user.play_count + 1
+    @user.save 
   end
 
   def pause
-  	@speaker.pause
+  	# @speaker.pause
+    # if Time.now is between 8.30am and 6pm  
+      @user = current_user
+      @user.pause_count = @user.pause_count + 1
+      @user.save 
   end 
 
   def next 
-    # Get ID of current_user 
-    # Check if they've skipped a song today 
-    # If > 1 'Sorry, you can only skip one song a day. Next time, make sure you really hate it!''
-    # else
-    # prompt 'You can only skip one song a day, are you sure you hate this that much?'
-    @speaker.next 
+    # Count how many times the current user has skipped a song today
+    @skips_today = current_user.skips.where("created_at >= ?", Time.zone.now.beginning_of_day).count
 
-    # Get ID of user who added current song 
-    # Add 1 to user.skipped 
-    # Get ID of current_user 
-    # Add 1 to user.daily_skips 
+    # If they've skipped 1 song, tell them they can't skip again until tomorrow 
+    if @skips_today >= 1
+      respond_to do |format|
+        format.html { redirect_to root_path, notice: "Woah there, Skippy! You can only skip one song a day! I hope it was worth it..." }
+      end
+    # Otherwise, get the ID of the user who played the song and build the skip   
+    else
+      @current_track = @speaker.now_playing[:title] 
+      @track = Track.where(:name => @current_track)
+      # Get user ID of track 
+      @user_id = @track.user_id
+      current_user.skip(@user_id)
+
+      # Finally, skip the track 
+      @speaker.next 
+    end
+
   end
 
-  def add_to_queue
+  def add_to_playlist
+    @track = current_user.tracks.build
+    @track.name = params[:name]
+    @track.artist = params[:artist]
+    @track.album = params[:album]
+    @track.uri = params[:uri]
+    @track.save
 
-    # Get ID of current_user
-    # Check how many skips they've had this week 
-    # if > 3, 'You can't add any more songs this week. Too many have been skipped!' 
-    # else 
+    @playlist = Playlist.find(params[:playlist_id])
+    @playlist.tracks << @track
 
-    @uri = params[:uri] 
-    @speaker.add_to_queue 'x-sonos-spotify:spotify:track:2CJtimCSGAn8x6RE3irZFVsid=9&amp;flags=32' # replace with variable for spotify URI
-  end 
+  end
 
-  # def if queue is empty, select random playlist and play 
 
-  # def clear number of user.skipped each week 
+  def add_to_queue(uri)
+    # Set the time range to search for times user has been skipped
+    @time_range = (1.week.ago..Time.now)
+    @been_skipped_this_week = current_user.been_skipped.where(:created_at => @time_range).count
 
-  # def clear user.daily_skips at midnight every night 
+    # If they've been skipped 3 or more times, alert them that they can't add anything to the queue
+      @speaker.add_to_queue 'x-sonos-spotify:' + uri + '?sid=9&amp;flags=32' # replace with variable for spotify URI
+
+  end
+
+  def add_playlist_to_queue
+    @playlist = Playlist.find(params[:id])
+    @playlist.tracks.each do |track|
+      track.add_to_queue(track.uri)
+    end
+  end
+
+  # def if queue is empty, select random playlist and play  
 
   # def black list - every user can have 5 tracks they can ban from Spotify - check that no duplicates 
+
 
   private 
 
   def get_speaker
     # system = Sonos::System.new # Auto-discovers your system
     # @speaker = system.groups.first.master_speaker 
+  end
+
+  def set_user
+    @user = User.find_by_id(current_user.id)
   end
 
 end

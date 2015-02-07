@@ -1,3 +1,18 @@
+<!-- Create new playlist modal -->
+<div class="modal fade new-playlist-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <%= form_for [@playlist] do |f| %>
+
+	  <div><%= f.label :name %><br />
+	  <%= f.text_field :name, autofocus: true %></div>
+
+	  <div><%= f.submit "Create playlist" %></div>
+	<% end %>
+    </div>
+  </div>
+</div>
+
 <div class="container">
 	<div class="form-group">
 		<%= text_field_tag :search, params[:search], placeholder: "What do you want to listen to?", id: "spotifysearch", class: "form-control col-lg-12" %>
@@ -7,6 +22,50 @@
 	<div id="search-results">
 
 	</div>	
+
+
+	<div class="track-management">
+		<ul class="nav nav-tabs" role="tablist">
+		  <li class="active"><a href="#playlists" role="tab" data-toggle="tab">Playlists</a></li>
+		  <li><a href="#stats" role="tab" data-toggle="tab">Stats</a></li>
+		</ul>
+		<div class="tab-content">
+		  <div class="tab-pane active" id="playlists">
+		  	<h2>Playlists</h2>
+		  	<P><%= link_to fa_icon('music lg') + ' Create new playlist', '#',class: "btn btn-primary", :'data-toggle' => 'modal', :'data-target' => '.new-playlist-modal' %></P>
+		  	<% @playlists.each do |playlist| %>
+		  		<h4><%= playlist.name %></h4>
+		  		Curated by <%= playlist.user.first_name %>
+		  		<% end %>
+		  </div>
+		  <div class="tab-pane" id="stats">
+		  	<div class="panel panel-default">
+			  <div class="panel-body">
+			    <p>Below are the statistics for the MG music player - who's been skipping, who's been turning off the music in work hours, who's had the most tracks skipped!</p>
+			  </div>
+
+			  <!-- Table -->
+			  <table class="table">
+			  	<tr class="table-header">
+			  		<td>User</td>
+			  		<td>Skips made this week</td>
+			  		<td># Tracks been skipped this week</td>
+			  		<td># Tracks been skipped all time</td>
+			  	
+			  	</tr>
+			  	<% @users.each do |user| %>
+			  		<tr>
+			  			<td><%= user.first_name %> <%= user.last_name %></td>
+			  			<td><%= user.skips.where(:created_at => @time_range).count %></td>
+			  			<td><%= user.been_skipped.where(:created_at => @time_range).count %></td>
+			  			<td><%= user.been_skipped.count %></td>
+			  		</tr>
+			  	<% end %>
+			  </table>
+			</div>	
+		  </div>
+		</div>
+	</div>
 </div>
 
 <script>

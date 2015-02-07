@@ -1,0 +1,14 @@
+<div class="container">
+	<h2>Users</h2>
+	<div class="row">
+			<div class="col-lg-3">Name</div>
+			<div class="col-lg-3">Times Skipped This Week</div>
+			<div class="col-lg-3">Total Times Skipped</div>
+	</div>
+	<% @users.each do |user| %>
+		<div class="row">
+			<div class="col-lg-3"><%= user.first_name %> <%= user.last_name %></div>
+			<div class="col-lg-3"><%= user.been_skipped.where(:created_at => @time_range).count %></div>
+			<div class="col-lg-3"><%= user.been_skipped.count %></div>
+		</div>
+	<% end %>	

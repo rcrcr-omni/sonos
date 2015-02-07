@@ -1,6 +1,7 @@
-<%= link_to 'pause', '#', id: "pause-button", remote: true %>
-<%= link_to 'next', '#', id: "next-button", remote: true %>
-
+<div class="center">
+<%= link_to fa_icon('pause 3x'), '#', id: "pause-button", remote: true %>
+<%= link_to fa_icon('forward 3x'), '#', id: "next-button", remote: true %>
+</div>
 <script>
 	$('#pause-button').click(function() {
 		$.post('/pages/pause/');

@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
  	def index
 		@users = User.all 
+    @time_range = (1.week.ago..Time.now)
 	end
 
 	def show
