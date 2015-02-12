@@ -5,8 +5,6 @@ class PagesController < ApplicationController
   require 'sonos'
   require 'rspotify'
 
-  Sonos.logging_enabled = 'debug'
-
   def home
     @playlists = Playlist.all
     @playlist = current_user.playlists.build
@@ -77,12 +75,16 @@ helper_method :browse
     else
       @current_track = @speaker.now_playing[:title] 
       @track = Track.where(:name => @current_track)
-      # Get user ID of track 
-      @user_id = @track.user_id
-      current_user.skip(@user_id)
+      if @track.exists?
+        # Get user ID of track 
+        @user_id = @track.user_id
+        current_user.skip(@user_id)
 
-      # Finally, skip the track 
-      @speaker.next 
+        # Finally, skip the track 
+        @speaker.next 
+      else
+        @speaker.next
+      end
     end
 
   end
@@ -140,7 +142,7 @@ helper_method :browse
 
   def get_speaker
      system = Sonos::System.new # Auto-discovers your system
-     @speaker = system.groups.first.master_speaker 
+     @speaker = system.speakers.last
   end
 
 end
