@@ -3,14 +3,15 @@
 	<div>
 		<% @playlist.tracks.each do |track| %> 
 			<%= track.name %><br>
-			<%= link_to 'next', '', id: "next-button-" + track.id.to_s, remote: true %>
+			<%= track.spotify_id %>
+			<%= link_to 'add to queue', '', id: "add-button-" + track.id.to_s, remote: true, class: "btn btn-primary" %><br>
 				<script>
-					$('#next-button-<%= track.id %>').click(function() {
+					$('#add-button-<%= track.id %>').click(function() {
 						$.ajax({
 							type: 'post',
-							data: '&:id=<%= track.id %>' + '&:user_id=<%= track.user_id %>',
+							data: '&spotify_id=<%= track.spotify_id %>',
 							dataType: 'script',
-							url: '/pages/next/' });
+							url: '/pages/add_single_track_to_play_queue/' });
 					});
 				</script>
 	

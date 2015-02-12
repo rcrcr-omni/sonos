@@ -28,7 +28,7 @@
 								  		$('#addtoplaylist-<%= index.to_s %><%= playlist.id.to_s %>').click(function() {
 										$.ajax({
 											type: 'post',
-											data: '&uri=<%=track.uri %>' + '&name=<%=track.name %>' + '&artist=<%=track.album.artists.first.name %>' + '&album=<%=track.album.name %>' + '&playlist_id=<%=playlist.id %>',
+											data: '&uri=<%=track.uri %>' + '&name=<%=track.name %>' + '&artist=<%=track.album.artists.first.name %>' + '&album=<%=track.album.name %>' + '&playlist_id=<%=playlist.id %>' + '&spotify_id=<%=track.id%>',
 											dataType: 'script',
 											url: '/pages/add_to_playlist/' });
 										});
@@ -43,7 +43,7 @@
 								$('#addtolastplaylist<%=index.to_s%>').click(function() {
 									$.ajax({
 										type: 'post',
-										data: '&uri=<%=track.uri %>' + '&name=<%=track.name %>' + '&artist=<%=track.album.artists.first.name %>' + '&album=<%=track.album.name %>' + '&playlist_id=<%= current_user.playlists.last.id %>',
+										data: '&uri=<%=track.uri %>'+ '&spotify_id=<%=track.id%>' + '&name=<%=track.name %>' + '&artist=<%=track.album.artists.first.name %>' + '&album=<%=track.album.name %>' + '&playlist_id=<%= current_user.playlists.last.id %>',
 										dataType: 'script',
 										url: '/pages/add_to_playlist/' });
 								});

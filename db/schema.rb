@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150206174937) do
+ActiveRecord::Schema.define(version: 20150209095949) do
 
   create_table "playlists", force: true do |t|
     t.string   "name"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20150206174937) do
     t.integer  "playlist_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "spotify_id"
   end
 
   create_table "users", force: true do |t|

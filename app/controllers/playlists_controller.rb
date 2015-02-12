@@ -1,6 +1,5 @@
 class PlaylistsController < ApplicationController
 
-	before_filter :set_user
 
 	def index
 	end
@@ -24,14 +23,11 @@ class PlaylistsController < ApplicationController
 
 	def show
 		@playlist = Playlist.find(params[:id])
+		@user = @playlist.user
 	end
 
 
 	private
-
-		def set_user
-		  @user = User.find_by_id(current_user.id)
-		end
 
 		def playlist_params
       		params.require(:playlist).permit(:name, :user_id)

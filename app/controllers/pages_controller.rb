@@ -1,14 +1,16 @@
 class PagesController < ApplicationController
   before_filter :get_speaker
-  before_filter :set_user
 
   require 'rubygems'
   require 'sonos'
   require 'rspotify'
 
+  Sonos.logging_enabled = 'debug'
+
   def home
     @playlists = Playlist.all
     @playlist = current_user.playlists.build
+    @users = User.all
   end
 
   def spotify
@@ -37,6 +39,10 @@ helper_method :success_path
   def success_path
   end
 
+helper_method :browse
+  def browse
+  end
+
   def refresh_part
     respond_to do |format|
       format.js
@@ -44,17 +50,17 @@ helper_method :success_path
   end
 
   def play
-  	# @speaker.play
+  	@speaker.play
     @user = current_user
-    @user.play_count = @user.play_count + 1
+    @user.play_count = @user.play_count += 1
     @user.save 
   end
 
   def pause
-  	# @speaker.pause
+  	 @speaker.pause
     # if Time.now is between 8.30am and 6pm  
       @user = current_user
-      @user.pause_count = @user.pause_count + 1
+      @user.pause_count = @user.pause_count += 1
       @user.save 
   end 
 
@@ -87,6 +93,7 @@ helper_method :success_path
     @track.artist = params[:artist]
     @track.album = params[:album]
     @track.uri = params[:uri]
+    @track.spotify_id = params[:spotify_id]
     @track.save
 
     @playlist = Playlist.find(params[:playlist_id])
@@ -94,21 +101,33 @@ helper_method :success_path
 
   end
 
+    def add_to_play_queue(uri)
+    puts uri
+       @speaker.add_spotify_to_queue({:id => uri, :type => 'track'})
+       puts uri + ' Added to queue'
+  end
 
-  def add_to_queue(uri)
-    # Set the time range to search for times user has been skipped
-    @time_range = (1.week.ago..Time.now)
-    @been_skipped_this_week = current_user.been_skipped.where(:created_at => @time_range).count
-
-    # If they've been skipped 3 or more times, alert them that they can't add anything to the queue
-      @speaker.add_to_queue 'x-sonos-spotify:' + uri + '?sid=9&amp;flags=32' # replace with variable for spotify URI
-
+  def add_single_track_to_play_queue
+    @id = params[:spotify_id]
+      @speaker.add_to_queue "x-sonos-spotify:spotify:track:2CJtimCSGAn8x6RE3irZFV?sid=9&amp;flags=32" # Add Top Gun To Queue THIS WORKS
+      puts @id + ' added top gun to queue'
+      @speaker.add_spotify_to_queue(opts={:id => @id, :type => 'track'})
+      puts @id + ' Added to queue'
+      @speaker.add_spotify_to_queue({id: @id, type: 'track'})
+      puts @id + ' Added to queue'
+     @speaker.add_to_queue 'x-sonos-spotify:' + @id + '?sid=9&amp;flags=32'
+     # :spotify:track: gets the album art 
+     puts @id + ' Added to queue'
   end
 
   def add_playlist_to_queue
     @playlist = Playlist.find(params[:id])
-    @playlist.tracks.each do |track|
-      track.add_to_queue(track.uri)
+    if @playlist.tracks.exists? 
+      @playlist.tracks.each do |track|
+        add_to_play_queue(track.spotify_id)
+      end
+    else
+      redirect_to root_path, notice: "Whoops! That playlist doesn't have any tracks!"
     end
   end
 
@@ -120,12 +139,8 @@ helper_method :success_path
   private 
 
   def get_speaker
-    # system = Sonos::System.new # Auto-discovers your system
-    # @speaker = system.groups.first.master_speaker 
-  end
-
-  def set_user
-    @user = User.find_by_id(current_user.id)
+     system = Sonos::System.new # Auto-discovers your system
+     @speaker = system.groups.first.master_speaker 
   end
 
 end

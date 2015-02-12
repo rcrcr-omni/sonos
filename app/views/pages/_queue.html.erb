@@ -1,5 +1,5 @@
 <div id="queue">
-<% @speaker.queue[:items].each do |track| %>
+<% @speaker.queue(0,5000)[:items].each do |track| %>
 		<p><%= track[:title] %> - <%= track[:artist] %></p>
 	<% end %> 
 </div>

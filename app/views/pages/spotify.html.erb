@@ -32,11 +32,27 @@
 		<div class="tab-content">
 		  <div class="tab-pane active" id="playlists">
 		  	<h2>Playlists</h2>
-		  	<P><%= link_to fa_icon('music lg') + ' Create new playlist', '#',class: "btn btn-primary", :'data-toggle' => 'modal', :'data-target' => '.new-playlist-modal' %></P>
+		  	<P><%= link_to fa_icon('plus-square-o lg') + ' Create new playlist', '#',class: "btn btn-primary", :'data-toggle' => 'modal', :'data-target' => '.new-playlist-modal' %></P>
 		  	<% @playlists.each do |playlist| %>
-		  		<h4><%= playlist.name %></h4>
-		  		Curated by <%= playlist.user.first_name %>
-		  		<% end %>
+		  		<div class="search-results">
+		  			<div class="details">
+				  		<h4><%= playlist.name %></h4>
+				  		Curated by <%= playlist.user.first_name %>
+		  			</div>
+		  			<div class="actions">
+		  				<%= link_to fa_icon('music lg') + ' Add playlist to queue', '', class: 'btn btn-primary', id: 'addplaylisttoqueue-' + playlist.id.to_s %>
+		  				<script>
+		  					$('#addplaylisttoqueue-<%= playlist.id.to_s %>').click(function() {
+			  				 $.ajax({
+								type: 'post',
+								data: '&id=<%= playlist.id %>',
+								dataType: 'script',
+								url: '/pages/add_playlist_to_queue/' });
+							});
+						</script>
+		  			</div>
+		  		</div>
+		  	<% end %>
 		  </div>
 		  <div class="tab-pane" id="stats">
 		  	<div class="panel panel-default">
