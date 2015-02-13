@@ -19,7 +19,9 @@ Rails.application.routes.draw do
   resources :users
   resources :playlists
 
-  root 'pages#home'
+  root 'pages#index'
+
+  get '/player/' => 'pages#player'
 
   get '/spotify/' => 'pages#spotify'
 

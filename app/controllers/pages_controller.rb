@@ -1,11 +1,16 @@
 class PagesController < ApplicationController
   before_filter :get_speaker
+  before_action :authenticate_user!, only: [:player, :spotify]
 
   require 'rubygems'
   require 'sonos'
   require 'rspotify'
 
-  def home
+  def index
+  end
+
+
+  def player
     @playlists = Playlist.all
     @playlist = current_user.playlists.build
     @users = User.all
@@ -111,15 +116,7 @@ helper_method :browse
 
   def add_single_track_to_play_queue
     @id = params[:spotify_id]
-      @speaker.add_to_queue "x-sonos-spotify:spotify:track:2CJtimCSGAn8x6RE3irZFV?sid=9&amp;flags=32" # Add Top Gun To Queue THIS WORKS
-      puts @id + ' added top gun to queue'
-      @speaker.add_spotify_to_queue(opts={:id => @id, :type => 'track'})
-      puts @id + ' Added to queue'
-      @speaker.add_spotify_to_queue({id: @id, type: 'track'})
-      puts @id + ' Added to queue'
-     @speaker.add_to_queue 'x-sonos-spotify:' + @id + '?sid=9&amp;flags=32'
-     # :spotify:track: gets the album art 
-     puts @id + ' Added to queue'
+      @speaker.add_to_queue "x-sonos-spotify:spotify%3atrack%3a6BLpO1HyXTVHlv0fTT3mme?sid=9&amp;flags=32%26sn=3" # Add Top Gun To Queue THIS WORKS
   end
 
   def add_playlist_to_queue
@@ -141,8 +138,8 @@ helper_method :browse
   private 
 
   def get_speaker
-     system = Sonos::System.new # Auto-discovers your system
-     @speaker = system.speakers.last
+    # system = Sonos::System.new # Auto-discovers your system
+    # @speaker = system.groups.first.master_speaker
   end
 
 end

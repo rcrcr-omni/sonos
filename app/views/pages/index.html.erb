@@ -1,0 +1,18 @@
+<div class="container">
+	<% if user_signed_in? %>
+		<div class="jumbotron center">
+			<h2>Hi <%= current_user.try(:first_name) %></h2>
+			<p><%= link_to 'Go put some music on', player_path %></p>
+			<p><%= link_to 'Check out the playlists', playlists_path %></p>
+		</div>
+	<% else %>
+		<div class="jumbotron center">
+			<h1>MG Sonos Controller</h1>
+			<p>Howdy. So you wanna play DJ? You best sign in below.</p>
+			<%= link_to 'Sign In', new_user_session_path, class: "btn btn-primary btn-lg" %>
+			<br>
+			<br>
+			<%= link_to 'Register', new_user_registration_path, class: "btn btn-default" %>
+		</div>
+	<% end %>
+</div>
