@@ -1,4 +1,35 @@
 <!-- Create new playlist modal -->
+<%= @system %>
+
+<br>
+
+
+
+<br>
+
+<% @system.speakers.each do |speaker| %>
+	<% if speaker.ip == "192.168.1.96" %>
+	<p><%= speaker.name %></p>
+	<% end %>
+	<% end %>
+
+<br>
+
+<br>
+
+<% @speakers = @system.speakers.sort! {|a,b| a.ip <=> b.ip} %>
+   <% @speaker = @speakers[1] %>
+   <%= @speaker.name %>
+
+<br>
+
+<br>
+
+
+<%= @groups %>
+
+
+
 <div class="modal fade new-playlist-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">

@@ -1,11 +1,11 @@
-<!-- workaround as is_playing? method has died --> <% if  @speaker.now_playing.empty? %>
-		There ain't no music happenin' here!
-<% else %> 
+<!-- workaround as is_playing? method has died --> 
+<% if  @speaker.is_playing? %>
 	<div id="now-playing">
 	Now Playing: <%= @speaker.now_playing[:title] %> - <%= @speaker.now_playing[:artist] %>
-			<br>
-			<img src="<%= @speaker.now_playing[:album_art] %>">
-			<br>
+		<br>
+		<img src="<%= @speaker.now_playing[:album_art] %>">
+		<br>
 	</div>
-
+<% else %> 
+	There ain't no music happenin' here!
 <% end %>

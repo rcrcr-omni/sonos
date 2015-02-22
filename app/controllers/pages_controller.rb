@@ -138,8 +138,9 @@ helper_method :browse
   private 
 
   def get_speaker
-    # system = Sonos::System.new # Auto-discovers your system
-    # @speaker = system.groups.first.master_speaker
-  end
+    @system = Sonos::System.new # Auto-discovers your system
+    @speakers = @system.speakers.sort! {|a,b| a.ip <=> b.ip}
+    @speaker = @speakers[1]
+  end 
 
 end
