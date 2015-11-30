@@ -46,6 +46,8 @@ gem 'bootstrap-sass'
 
 gem 'font-awesome-rails'
 
+gem 'slack-poster'
+
 
 
 group :development, :test do

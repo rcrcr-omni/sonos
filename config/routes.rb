@@ -1,30 +1,6 @@
 Rails.application.routes.draw do
 
-  devise_for :users
-
-  resources :pages do
-    collection do
-      post 'play'
-      post 'pause'
-      post 'next'
-      post 'add_to_play_queue'
-      post 'add_single_track_to_play_queue'
-      post 'refresh_part'
-      post 'spotify_search'
-      post 'add_to_playlist'
-      post 'add_playlist_to_queue'
-    end
-  end
-
-  resources :users
-  resources :playlists
-
-  root 'pages#index'
-
-  get '/player/' => 'pages#player'
-
-  get '/spotify/' => 'pages#spotify'
-
+  post '/play' => 'pages#sonos_control'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

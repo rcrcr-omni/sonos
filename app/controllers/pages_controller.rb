@@ -1,146 +1,64 @@
 class PagesController < ApplicationController
   before_filter :get_speaker
-  before_action :authenticate_user!, only: [:player, :spotify]
+  skip_before_filter :verify_authenticity_token, :only => :sonos_control
 
   require 'rubygems'
   require 'sonos'
   require 'rspotify'
 
-  def index
+  def splash
   end
 
+  def sonos_control
+    puts 'received a command'
+    @user_id = params[:user_id]
+    @user = params[:user_name]
+    @user_object = "<@#{@user_id}|#{@user}>"
+    @text = params[:text]
 
-  def player
-    @playlists = Playlist.all
-    @playlist = current_user.playlists.build
-    @users = User.all
-  end
+    options = {
+      icon_emoji: 'arrow_forward'
+    }
+    @poster = Slack::Poster.new('https://hooks.slack.com/services/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', options)
 
-  def spotify
-    @playlists = Playlist.all
-    @playlist = current_user.playlists.build
-    @users = User.all
-  end
-  
-  def spotify_search
-    if params[:search].empty?
-      respond_to do |format| 
-        format.html { redirect_to spotify_path, notice: "Try searching for something" }
-      end
-    else 
-      @artists = RSpotify::Artist.search(params[:search])
-      @albums = RSpotify::Album.search(params[:search])
-      @tracks = RSpotify::Track.search(params[:search])
-    end
+    if @text == 'play'
+      @speaker.play
+      @msg = @user_object + " started the sonos playing! Good job!" 
+      @poster.send_message(@msg)
+      render :file => "/pages/msg.json.erb", :content_type => 'application/json' and return
 
-
-  end
+    
+    elsif @text == 'pause'
+      @speaker.pause
+      @msg = @user_object + " just paused the Sonos"
+      @poster.send_message(@msg)
+      render :file => "/pages/msg.json.erb", :content_type => 'application/json' and return
 
 
-helper_method :success_path
+    elsif @text == 'skip'
+      @msg = @user_object + " just skipped *#{@speaker.now_playing[:title]}* by _#{@speaker.now_playing[:artist]}_."
+      @speaker.next
+      @poster.send_message(@msg)
+      render :file => "/pages/msg.json.erb", :content_type => 'application/json' and return
 
-  def success_path
-  end
 
-helper_method :browse
-  def browse
-  end
-
-  def refresh_part
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def play
-  	@speaker.play
-    @user = current_user
-    @user.play_count = @user.play_count += 1
-    @user.save 
-  end
-
-  def pause
-  	 @speaker.pause
-    # if Time.now is between 8.30am and 6pm  
-      @user = current_user
-      @user.pause_count = @user.pause_count += 1
-      @user.save 
-  end 
-
-  def next 
-    # Count how many times the current user has skipped a song today
-    @skips_today = current_user.skips.where("created_at >= ?", Time.zone.now.beginning_of_day).count
-
-    # If they've skipped 1 song, tell them they can't skip again until tomorrow 
-    if @skips_today >= 1
-      respond_to do |format|
-        format.html { redirect_to root_path, notice: "Woah there, Skippy! You can only skip one song a day! I hope it was worth it..." }
-      end
-    # Otherwise, get the ID of the user who played the song and build the skip   
+    elsif @text == 'playing'
+      @msg = "You are listening to *#{@speaker.now_playing[:title]}* by _#{@speaker.now_playing[:artist]}_"
+      render :file => "/pages/msg.json.erb", :content_type => 'application/json' and return
     else
-      @current_track = @speaker.now_playing[:title] 
-      @track = Track.where(:name => @current_track)
-      if @track.exists?
-        # Get user ID of track 
-        @user_id = @track.user_id
-        current_user.skip(@user_id)
+      @msg = "You need to tell me what you want to do! play (play the sonos) pause (pause the sonos) skip (skip this track) playing (find out what is playing now)"
+      render :file => "/pages/msg.json.erb", :content_type => 'application/json' and return
 
-        # Finally, skip the track 
-        @speaker.next 
-      else
-        @speaker.next
-      end
     end
 
   end
-
-  def add_to_playlist
-    @track = current_user.tracks.build
-    @track.name = params[:name]
-    @track.artist = params[:artist]
-    @track.album = params[:album]
-    @track.uri = params[:uri]
-    @track.spotify_id = params[:spotify_id]
-    @track.save
-
-    @playlist = Playlist.find(params[:playlist_id])
-    @playlist.tracks << @track
-
-  end
-
-    def add_to_play_queue(uri)
-    puts uri
-       @speaker.add_spotify_to_queue({:id => uri, :type => 'track'})
-       puts uri + ' Added to queue'
-  end
-
-  def add_single_track_to_play_queue
-    @id = params[:spotify_id]
-      @speaker.add_to_queue "x-sonos-spotify:spotify%3atrack%3a6BLpO1HyXTVHlv0fTT3mme?sid=9&amp;flags=32%26sn=3" # Add Top Gun To Queue THIS WORKS
-  end
-
-  def add_playlist_to_queue
-    @playlist = Playlist.find(params[:id])
-    if @playlist.tracks.exists? 
-      @playlist.tracks.each do |track|
-        add_to_play_queue(track.spotify_id)
-      end
-    else
-      redirect_to root_path, notice: "Whoops! That playlist doesn't have any tracks!"
-    end
-  end
-
-  # def if queue is empty, select random playlist and play  
-
-  # def black list - every user can have 5 tracks they can ban from Spotify - check that no duplicates 
-
 
   private 
 
   def get_speaker
     @system = Sonos::System.new # Auto-discovers your system
-    @speakers = @system.speakers.sort! {|a,b| a.ip <=> b.ip}
-    @speaker = @speakers[1]
+    # @speakers = @system.speakers.sort! {|a,b| a.ip <=> b.ip}
+    @speaker = @system.speakers.first
   end 
 
 end

@@ -59,6 +59,9 @@ GEM
       builder (>= 2.1.2)
     hashie (3.3.2)
     hike (1.2.3)
+    httparty (0.13.3)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     httpclient (2.6.0.1)
     httpi (2.3.0)
       rack
@@ -154,6 +157,8 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    slack-poster (1.0.1)
+      httparty (~> 0.12)
     sonos (0.3.6)
       httpclient
       nokogiri
@@ -210,6 +215,7 @@ DEPENDENCIES
   rspotify
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
+  slack-poster
   sonos
   sqlite3
   turbolinks

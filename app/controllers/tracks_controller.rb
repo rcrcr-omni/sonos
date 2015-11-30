@@ -1,6 +1,0 @@
-class TracksController < ApplicationController 
-
-	
-
-
-end
